@@ -1,6 +1,6 @@
 .title {
 	color: black;
-    font-family: Palatino;
+    font-family: Bradley Hand;
     font-size: 300%;
     margin-bottom: 2cm;
 }
@@ -53,11 +53,19 @@
     height: 200px;
 }
 
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 20%;
+  height: 20%;
+}
+
 .text {
 	color:black;
 	font-family: Big Caslon;
 	font-size: 120%;
-	float: right;
+	float: middle;
 }
 
 .images {
