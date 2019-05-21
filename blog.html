@@ -21,6 +21,91 @@
 </div>
 
 <div class="blogentryheader">
+<center>Does Attending a Top-Tier University Matter? A Two-Stage Least Squares Analysis</center>
+</div>
+
+<div class="blogentrydate">
+<center>May 20, 2019</center>
+</div>
+
+<div class="blogentry">
+<center>
+Many high-achieving American high school students are convinced that attending a top-tier university (e.g., top 10 in the U.S. News rankings) will set them up for a life of success. However, recent studies
+suggest that, on its own, attending a highly ranked institution does \(not\) have a meaningful impact on a person's life outcome, at least not in monetary terms. In fact, the studies conclude that similarly ambitious
+high school students tend to achieve the same levels of financial success in life, regardless of the differences in their universities' rankings. These results are encouraging, as they imply that an individual's "success" in life
+depends only on themselves, at least in an immediately quanitifiable way, and not on a lucky break in the college admissions process.
+
+<br/>
+<br/>
+<br/>
+I wanted to see for myself whether or not these results were supported by the data. Using the publicly available College ScoreCard data set provided by the U.S. Department of Education, I 
+constructed a simple model to analyze whether or not attending a top-tier university in the U.S. has a meaningful causal effect on one's life outcomes. I should note that I made a couple of simplifying
+assumptions while coming up with the model. For one, I measured university graduates' "success" in life using financial metrics, as they are quanitifiable and objective. Of course, financial outcomes don't tell the whole story about
+a person's happiness in life and career fulfillment, but that's an entirely different debate. In addition, I measured students' "ambition" and "studiousness" using SAT scores, as they are one of the only universal metrics we have 
+to compare students from different high schools. Using SAT scores as an indicator of high school students' quality presents a whole separate host of issues, but there simply aren't many better alternatives. Furthermore, I controlled
+for percentages of Pell grant recipients, as this (imperfectly) captures some information about the financial demographics of universities' student bodies. Finally, and perhaps most controversially, I limited the definition of "top-tier" U.S. universities to only include universities ranked in the top 10, as per the 2019 iteration of the U.S. News rankings. Needless to say, that definition of "top-tier" is probably way too strict, but I wanted to see
+if the results of the recent studies would change under such an extreme cutoff.
+
+
+<br/>
+<br/>
+<br/>
+Ultimately, I settled on the following two-stage structural model:
+
+<br/>
+<br/>
+
+$$ \text{TOP} = \gamma_0 + \gamma_1 \text{SAT} + \gamma_2 \text{PELL} + \nu $$
+
+$$ \text{EARNINGS} = \beta_0 + \beta_1 \text{SAT} + \beta_2 \text{PELL} + \beta_3 \widehat{\text{TOP}} + \epsilon    $$
+
+<br/>
+
+In this model, TOP is a binary variable taking on a value of one if a given university is ranked in the top 10 according to the U.S. News rankings and zero otherwise. The intuition
+behind this approach is that university rankings are strongly correlated with students' test scores, so a simpler model of the form
+
+
+\( \text{EARNINGS} = \beta_0 + \beta_1 \text{SAT} + \beta_2 \text{PELL} + \beta_3 \text{TOP} + \epsilon  \)
+
+would produce biased estimates of the coefficients \(\beta_i\) due to endogenous confounders. 
+
+<br/>
+<br/>
+
+The first stage in the structural model above produces something of an
+estimated ranking \( \widehat{\text{TOP}} \) of a university given information about students' SAT scores and financial demographic information. The second
+stage in the structural model then uses this estimated ranking \( \widehat{\text{TOP}} \) in addition to the SAT score and financial demographic information
+to estimate the students' long-run financial earnings. Performing the regression in this two-stage approach yields coefficient estimates that are statistically consistent.
+
+<br/>
+<br/>
+
+After fitting the model, I obtained the following estimates:
+
+<br/>
+<br/>
+
+<img src="./img/output.png" width="450" height="150">
+
+<br/>
+<br/>
+
+It appears that SAT scores are positively correlated with long-run earnings, and this correlation is statistically significant. However, neither financial demographics nor 
+university rankings are correlated with long-run earnings in a statistically signficant way. The takeaway? 
+
+<br/>
+<br/>
+
+It seems as though rankings don't matter after all! According to this model, the only legitimate indicator of a person's long-term success is their academic
+performance in high school, which is largely correlated with work ethic and personal drive. Good to know.
+
+</center>
+</div>
+
+
+
+
+<div class="blogentryheader">
 <center>An Overview of the Central Limit Theorem</center>
 </div>
 
