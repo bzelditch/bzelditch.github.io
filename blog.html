@@ -32,7 +32,7 @@
 
 <div class="blogentry">
 <center>
-Many high-achieving American high school students are convinced that attending a top-tier university (e.g., top 10 in the U.S. News rankings) will set them up for a life of success. However, recent studies
+Many high-achieving American high school students are convinced that attending a top-tier university will set them up for a life of success. However, recent studies
 suggest that, on its own, attending a highly ranked institution does \(not\) have a meaningful impact on a person's life outcome, at least not in monetary terms. In fact, the studies conclude that similarly ambitious
 high school students tend to achieve the same levels of financial success in life, regardless of the differences in their universities' rankings. These results are encouraging, as they imply that an individual's "success" in life
 depends only on themselves, at least in an immediately quanitifiable way, and not on a lucky break in the college admissions process.
@@ -41,8 +41,26 @@ depends only on themselves, at least in an immediately quanitifiable way, and no
 <br/>
 <br/>
 I wanted to see for myself whether or not these results were supported by the data. Using the publicly available College ScoreCard data set provided by the U.S. Department of Education, I 
-constructed a simple model to analyze whether or not attending a selective university in the U.S. has a meaningful causal effect on one's life outcomes. I should note that I made a couple of simplifying
-assumptions while coming up with the model. For one, I measured university graduates' "success" in life using financial metrics, as they are quanitifiable and objective. Of course, financial outcomes don't tell the whole story about
+constructed a simple model to analyze whether or not attending a selective university in the U.S. has a meaningful causal effect on one's life outcomes. As a quick sanity check, I looked at a
+scatterplot visualization of admission rates versus median earnings of graduates:
+
+<br/>
+<br/>
+
+<img src="img/admrate.png" width="450" height="250">
+
+<br/>
+<br/>
+
+As one would probably expect, there does appear to be a trend here:  median earnings generally decrease as the acceptance rate increases. 
+In particular, this relationship is most pronounced for the most selective universities (i.e., those with an admission rate less than ~30%). Beyond 
+these selective schools, the relationship between admission rates and median earnings becomes a bit murkier.
+
+<br/>
+<br/>
+
+In the process of modeling this relationship, I made a couple of key simplifying
+assumptions. For one, I measured university graduates' "success" in life using only financial metrics, as they are quanitifiable and objective. Of course, financial outcomes don't tell the whole story about
 a person's happiness in life and career fulfillment, but that's an entirely different debate. In addition, I measured the quality of each university's student body using average SAT scores because they are one of the only universal metrics we have 
 to compare students from different educational backgrounds. Finally, I controlled
 for the median family income of students attending each university, as this captures some information about the financial demographics of universities' student bodies. 
