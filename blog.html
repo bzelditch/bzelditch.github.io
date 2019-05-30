@@ -63,13 +63,29 @@ In the process of modeling this relationship, I made a couple of key simplifying
 assumptions. For one, I measured university graduates' "success" in life using only financial metrics, as they are quanitifiable and objective. Of course, financial outcomes don't tell the whole story about
 a person's happiness in life and career fulfillment, but that's an entirely different debate. In addition, I measured the quality of each university's student body using average SAT scores because they are one of the only universal metrics we have 
 to compare students from different educational backgrounds. Finally, I controlled
-for the median family income of students attending each university, as this captures some information about the financial demographics of universities' student bodies. 
+for the median family income of students attending each university, as this captures some information about the financial demographics of universities' students. 
+
+<br/>
+<br/>
+
+Before fitting any model, I sought to verify that there actually were significant relationships present in the data:
+
+<br/>
+<br/>
+
+<img src="img/sat.png" width="450" height="250">
+
+<img src="img/mdfaminc.png" width="450" height="250">
+
+<br/>
+
+The results weren't surprising:  both SAT scores and family income profiles are highly correlated with graduates' long-run earnings. People who did well
+in high school, and people who come from wealthy families to begin with, tend to have financial success themselves.
 
 
 <br/>
 <br/>
-<br/>
-I first considered the following structural model:
+With these sanity checks out of the way, I first considered the following structural model:
 
 <br/>
 <br/>
@@ -101,7 +117,7 @@ is, the better off its graduates are.
 <br/>
 <br/>
 This result is interesting, but it doesn't answer the question of whether or not selectivity has a causal effect on graduate outcomes. In other words,
-it doesn't imply anything about whether or not graduates from selective universities are better off \(because\) they attended a selective university or because
+it doesn't imply anything about whether or not graduates from selective universities are better off \(because\) they attended a selective university or
 because of some endogenous confounding factor not explained by the model. My gut feeling was that this relationship is probably not causal. Universities with
 highly visible brand names tend to attract far more applicants than relatively anonymous universities, lowering their acceptance rates, but these brand name universities
 are not always better than their less well-known counterparts.
