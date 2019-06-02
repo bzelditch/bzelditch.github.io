@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+
+<html>
+<meta charset = "UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+<head>
+<title> Ramblings </title>
+<link rel="stylesheet" href = "css/styles.css"></link>
+</head>
+
+
+<body>
+
+<div class="blogtitle">
+<center>Thoughts of the Day</center>
+</div>
+
+<div class="blogsubtitle">
+<center>(READER DISCRETION HIGHLY ADVISED)</center>
+</div>
+
+
+<div class="blogentryheader">
+<center>Does Attending a Selective University Matter? An Empirical Analysis</center>
+</div>
+
+<div class="blogentrydate">
+<center>May 24, 2019</center>
+</div>
+	
+	
+
+<div class="blogentry">
+<center>
+Many high-achieving American high school students are convinced that attending a top-tier university will set them up for a life of success. However, recent studies
+suggest that, on its own, attending a highly ranked institution does \(not\) have a meaningful impact on a person's life outcome, at least not in monetary terms. In fact, the studies conclude that similarly ambitious
+high school students tend to achieve the same levels of financial success in life, regardless of the differences in their universities' rankings. These results are encouraging, as they imply that an individual's "success" in life
+depends only on themselves, at least in an immediately quanitifiable way, and not on a lucky break in the college admissions process.
+
+<br/>
+<br/>
+<br/>
+I wanted to see for myself whether or not these results were supported by the data. Using the publicly available College ScoreCard data set provided by the U.S. Department of Education, I 
+constructed a simple model to analyze whether or not attending a selective university in the U.S. has a meaningful causal effect on one's life outcomes. As a quick sanity check, I looked at a
+scatterplot visualization of admission rates versus median earnings of graduates:
+
+<br/>
+<br/>
+
+<img src="img/admrate.png" width="450" height="250">
+
+<br/>
+<br/>
+
+As one would probably expect, there does appear to be a trend here:  median earnings generally decrease as the acceptance rate increases. 
+In particular, this relationship is most pronounced for the most selective universities (i.e., those with an admission rate less than ~30%). Beyond 
+these selective schools, the relationship between admission rates and median earnings becomes a bit murkier.
+
+<br/>
+<br/>
+
+In the process of modeling this relationship, I made a couple of key simplifying
+assumptions. For one, I measured university graduates' "success" in life using only financial metrics, as they are quanitifiable and objective. Of course, financial outcomes don't tell the whole story about
+a person's happiness in life and career fulfillment, but that's an entirely different debate. In addition, I measured the quality of each university's student body using average SAT scores because they are one of the only universal metrics we have 
+to compare students from different educational backgrounds. Finally, I controlled
+for the median family income of students attending each university, as this captures some information about the financial demographics of the universities' students. 
+
+<br/>
+<br/>
+
+Before fitting any model, I sought to verify that there actually were significant relationships present in the data:
+
+<br/>
+<br/>
+
+<img src="img/sat.png" width="450" height="250">
+
+<img src="img/mdfaminc.png" width="450" height="250">
+
+<img src="img/satadmrate.png" width="450" height="250">
+
+<br/>
+
+The results weren't surprising. First, both SAT scores and family income profiles are highly correlated with graduates' long-run earnings. People who did well
+in high school, and people who come from wealthy families to begin with, tend to have financial success themselves.  Similarly, SAT scores are highly correlated with
+admission rates, especially at the top. The most selective schools fill their student bodies with top performers on the SAT, either directly or indirectly.
+
+
+<br/>
+<br/>
+With these sanity checks out of the way, I first considered the following structural model:
+
+<br/>
+<br/>
+
+$$ \text{EARNINGS} = \beta_0 + \beta_ 1 \text{ADM_RATE} + \beta_2 \text{SAT} + \beta_3 \text{FAM_INCOME} + \epsilon    $$
+
+<br/>
+
+In this model, ADM_RATE is a continuous variable indicating the acceptance rate of the university, SAT is a continuous variable indicating the average SAT score
+of enrolled students at the university and FAM_INCOME is the median family income of enrolled students at the university. Intuitively, this model captures information
+about the correlation between a university's admission rate and the long-run life outcomes of its graduates while roughly controlling for the quality
+of students that attend the university as well as their financial backgrounds coming in to the university. This yielded the following regression output:
+
+
+
+<br/>
+<br/>
+
+<img src="img/initial.png" width="450" height="150">
+
+<br/>
+<br/>
+
+Judging by these results, it seems that there exists a significant correlation between university selectivity and graduates' long-run earnings,
+even when controlling for average SAT scores and family incomes. On average, an increase in a university's
+acceptance rate by just a single percent corresponds to a $7205 \(decrease\) in graduates' earnings. In other words, the more selective a university
+is, the better off its graduates are.
+
+<br/>
+<br/>
+This result is interesting, but it doesn't answer the question of whether or not selectivity has a causal effect on graduate outcomes. In other words,
+it doesn't imply anything about whether or not graduates from selective universities are better off \(because\) they attended a selective university or
+because of some endogenous confounding factor not explained by the model. My gut feeling was that this relationship is probably not causal. Universities with
+highly visible brand names tend to attract far more applicants than relatively anonymous universities, lowering their acceptance rates, but these brand name universities
+are not always better than their less well-known counterparts.
+
+
+<br/>
+<br/>
+
+To analyze this issue further, I decided to use an instrumental variables (IV) approach, which is designed to handle this issue of endogenous confounding. To accomplish this,
+I identified the size of the universities' student bodies (UGDS) as an instrumental variable for admission rates. The idea behind this was that larger universities tend to be
+more visible to the public (for one reason or another), and this heightened visibility is probably correlated with application numbers (which is, in turn, correlated with admission rates).
+A quick hypothesis test verified this assumption:  admission rates are positively correlated with undergraduate enrollment size in a statistically significant way.
+
+<br/>
+<br/>
+
+I then fitted the following two-stage structural model:
+
+<br/>
+<br/>
+
+$$\text{ADM_RATE} = \gamma_0 + \gamma_1 \text{UGDS} + \gamma_2 \text{SAT} + \gamma_3 \text{FAM_INCOME } + \xi $$
+
+$$\text{EARNINGS} = \beta_0 + \beta_1 \widehat{\text{ADM_RATE}} + \beta_2 \text{SAT}  + \beta_3 \text{FAM_INCOME } + \epsilon$$
+
+<br/>
+
+Here \(\widehat{\text{ADM_RATE}} \) can be thought of as an estimated admission rate for a university taking into account its enrollment size, average SAT score, and median family income.
+Using  \(\widehat{\text{ADM_RATE}} \) instead of \(\text{ADM_RATE} \) in the second model is crucial, as it yields a much more reliable estimate for the marginal effect
+of admission rates on long-run earnings. Fitting this two-stage model yielded the following output:
+
+
+<br/>
+<br/>
+
+<img src="img/2sls.png" width="450" height="150">
+
+<br/>
+<br/>
+
+These results are really interesting. After accounting for endogenous factors, it seems that admission rates are not correlated with graduate outcomes
+in a statistically significant way, which suggests that a university's selectivity does not have a meaningful causal effect on its graduates' life outcomes.
+
+
+<br/>
+<br/>
+Not yet completely satisfied, I decided only to consider universities with an average SAT score above a certain threshold. Using a threshold score of 1200, I re-plotted
+the relationship between admission rates and long-run earnings, as well as the covariates from earlier:
+
+<br/>
+
+<img src="img/admrate1200.png" width="450" height="250">
+
+<br/>
+<br/>
+
+<img src="img/sat1200.png" width="450" height="250">
+
+<img src="img/mdfaminc1200.png" width="450" height="250">
+
+<img src="img/satadmrate1200.png" width="450" height="250">
+
+<br/>
+
+As discovered before, there is a clear negative correlation between admission rates and long-run earnings, even for students who perform well on the SAT. Similarly,
+there are very strong correlations between SAT scores and long-run earnings, as well as SAT scores and admission rates. On the other hand, there does not
+appear to be a strong correlation between family income profiles and long-run earnings. This suggests that family wealth isn't as relevant for the best high school students as it
+is for more average students in the overall landscape of American high schools.
+
+<br/>
+<br/>
+
+Fitting the first structural model mentioned above yielded the following regression output:
+
+<br/>
+<br/>
+
+<img src="img/output1200.png" width="450" height="150">
+
+<br/>
+<br/>
+
+Interestingly enough, we see that there does not appear to be a statistically significant correlation between admission rates and median earnings. These results seem to confirm the findings of the two-stage model from before:  
+for accomplished and driven students, attending a selective university does not have a meaningful causal effect on their long-run professional success in life.
+Of course, it's difficult to conclude anything definitive from this analysis (just as it's difficult to conclude anything definitive about causality ever), but
+at least these results are encouraging. 
+
+
+</center>
+</div>
+
+
+</body>
+
+</html>

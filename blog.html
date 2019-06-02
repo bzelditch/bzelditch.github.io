@@ -20,371 +20,45 @@
 <center>(READER DISCRETION HIGHLY ADVISED)</center>
 </div>
 
-<div class="blogentryheader">
-<center>Does Attending a Selective University Matter? An Empirical Analysis</center>
-</div>
-
-<div class="blogentrydate">
-<center>May 24, 2019</center>
-</div>
-	
-	
-
-<div class="blogentry">
 <center>
-Many high-achieving American high school students are convinced that attending a top-tier university will set them up for a life of success. However, recent studies
-suggest that, on its own, attending a highly ranked institution does \(not\) have a meaningful impact on a person's life outcome, at least not in monetary terms. In fact, the studies conclude that similarly ambitious
-high school students tend to achieve the same levels of financial success in life, regardless of the differences in their universities' rankings. These results are encouraging, as they imply that an individual's "success" in life
-depends only on themselves, at least in an immediately quanitifiable way, and not on a lucky break in the college admissions process.
 
-<br/>
-<br/>
-<br/>
-I wanted to see for myself whether or not these results were supported by the data. Using the publicly available College ScoreCard data set provided by the U.S. Department of Education, I 
-constructed a simple model to analyze whether or not attending a selective university in the U.S. has a meaningful causal effect on one's life outcomes. As a quick sanity check, I looked at a
-scatterplot visualization of admission rates versus median earnings of graduates:
-
-<br/>
-<br/>
-
-<img src="img/admrate.png" width="450" height="250">
+<div class="card">
+    <a style="text-decoration:none;" align=middle class="imageLink" href = "university.html">
+    <img src="img/usnews.jpg" alt="Avatar" style="width:100%">
+    </a>
+    <div class="container">
+      <h4><b>Does Attending a Selective University Matter?</b></h4> 
+      <p>May 24, 2019</p>
+    </div>
+</div>
 
 <br/>
 <br/>
 
-As one would probably expect, there does appear to be a trend here:  median earnings generally decrease as the acceptance rate increases. 
-In particular, this relationship is most pronounced for the most selective universities (i.e., those with an admission rate less than ~30%). Beyond 
-these selective schools, the relationship between admission rates and median earnings becomes a bit murkier.
+<div class="card">
+        <a style="text-decoration:none;" align=middle class="imageLink" href = "clt.html">
+        <img src="img/bellcurve.png" alt="Avatar" style="width:100%">
+        </a>
+        <div class="container">
+          <h4><b>An Overview of the Central Limit Theorem</b></h4> 
+          <p>March 11, 2018</p>
+        </div>
+</div>
 
 <br/>
 <br/>
 
-In the process of modeling this relationship, I made a couple of key simplifying
-assumptions. For one, I measured university graduates' "success" in life using only financial metrics, as they are quanitifiable and objective. Of course, financial outcomes don't tell the whole story about
-a person's happiness in life and career fulfillment, but that's an entirely different debate. In addition, I measured the quality of each university's student body using average SAT scores because they are one of the only universal metrics we have 
-to compare students from different educational backgrounds. Finally, I controlled
-for the median family income of students attending each university, as this captures some information about the financial demographics of the universities' students. 
-
-<br/>
-<br/>
-
-Before fitting any model, I sought to verify that there actually were significant relationships present in the data:
-
-<br/>
-<br/>
-
-<img src="img/sat.png" width="450" height="250">
-
-<img src="img/mdfaminc.png" width="450" height="250">
-
-<img src="img/satadmrate.png" width="450" height="250">
-
-<br/>
-
-The results weren't surprising. First, both SAT scores and family income profiles are highly correlated with graduates' long-run earnings. People who did well
-in high school, and people who come from wealthy families to begin with, tend to have financial success themselves.  Similarly, SAT scores are highly correlated with
-admission rates, especially at the top. The most selective schools fill their student bodies with top performers on the SAT, either directly or indirectly.
-
-
-<br/>
-<br/>
-With these sanity checks out of the way, I first considered the following structural model:
-
-<br/>
-<br/>
-
-$$ \text{EARNINGS} = \beta_0 + \beta_ 1 \text{ADM_RATE} + \beta_2 \text{SAT} + \beta_3 \text{FAM_INCOME} + \epsilon    $$
-
-<br/>
-
-In this model, ADM_RATE is a continuous variable indicating the acceptance rate of the university, SAT is a continuous variable indicating the average SAT score
-of enrolled students at the university and FAM_INCOME is the median family income of enrolled students at the university. Intuitively, this model captures information
-about the correlation between a university's admission rate and the long-run life outcomes of its graduates while roughly controlling for the quality
-of students that attend the university as well as their financial backgrounds coming in to the university. This yielded the following regression output:
-
-
-
-<br/>
-<br/>
-
-<img src="img/initial.png" width="450" height="150">
-
-<br/>
-<br/>
-
-Judging by these results, it seems that there exists a significant correlation between university selectivity and graduates' long-run earnings,
-even when controlling for average SAT scores and family incomes. On average, an increase in a university's
-acceptance rate by just a single percent corresponds to a $7205 \(decrease\) in graduates' earnings. In other words, the more selective a university
-is, the better off its graduates are.
-
-<br/>
-<br/>
-This result is interesting, but it doesn't answer the question of whether or not selectivity has a causal effect on graduate outcomes. In other words,
-it doesn't imply anything about whether or not graduates from selective universities are better off \(because\) they attended a selective university or
-because of some endogenous confounding factor not explained by the model. My gut feeling was that this relationship is probably not causal. Universities with
-highly visible brand names tend to attract far more applicants than relatively anonymous universities, lowering their acceptance rates, but these brand name universities
-are not always better than their less well-known counterparts.
-
-
-<br/>
-<br/>
-
-To analyze this issue further, I decided to use an instrumental variables (IV) approach, which is designed to handle this issue of endogenous confounding. To accomplish this,
-I identified the size of the universities' student bodies (UGDS) as an instrumental variable for admission rates. The idea behind this was that larger universities tend to be
-more visible to the public (for one reason or another), and this heightened visibility is probably correlated with application numbers (which is, in turn, correlated with admission rates).
-A quick hypothesis test verified this assumption:  admission rates are positively correlated with undergraduate enrollment size in a statistically significant way.
-
-<br/>
-<br/>
-
-I then fitted the following two-stage structural model:
-
-<br/>
-<br/>
-
-$$\text{ADM_RATE} = \gamma_0 + \gamma_1 \text{UGDS} + \gamma_2 \text{SAT} + \gamma_3 \text{FAM_INCOME } + \xi $$
-
-$$\text{EARNINGS} = \beta_0 + \beta_1 \widehat{\text{ADM_RATE}} + \beta_2 \text{SAT}  + \beta_3 \text{FAM_INCOME } + \epsilon$$
-
-<br/>
-
-Here \(\widehat{\text{ADM_RATE}} \) can be thought of as an estimated admission rate for a university taking into account its enrollment size, average SAT score, and median family income.
-Using  \(\widehat{\text{ADM_RATE}} \) instead of \(\text{ADM_RATE} \) in the second model is crucial, as it yields a much more reliable estimate for the marginal effect
-of admission rates on long-run earnings. Fitting this two-stage model yielded the following output:
-
-
-<br/>
-<br/>
-
-<img src="img/2sls.png" width="450" height="150">
-
-<br/>
-<br/>
-
-These results are really interesting. After accounting for endogenous factors, it seems that admission rates are not correlated with graduate outcomes
-in a statistically significant way, which suggests that a university's selectivity does not have a meaningful causal effect on its graduates' life outcomes.
-
-
-<br/>
-<br/>
-Not yet completely satisfied, I decided only to consider universities with an average SAT score above a certain threshold. Using a threshold score of 1200, I re-plotted
-the relationship between admission rates and long-run earnings, as well as the covariates from earlier:
-
-<br/>
-
-<img src="img/admrate1200.png" width="450" height="250">
-
-<br/>
-<br/>
-
-<img src="img/sat1200.png" width="450" height="250">
-
-<img src="img/mdfaminc1200.png" width="450" height="250">
-
-<img src="img/satadmrate1200.png" width="450" height="250">
-
-<br/>
-
-As discovered before, there is a clear negative correlation between admission rates and long-run earnings, even for students who perform well on the SAT. Similarly,
-there are very strong correlations between SAT scores and long-run earnings, as well as SAT scores and admission rates. On the other hand, there does not
-appear to be a strong correlation between family income profiles and long-run earnings. This suggests that family wealth isn't as relevant for the best high school students as it
-is for more average students in the overall landscape of American high schools.
-
-<br/>
-<br/>
-
-Fitting the first structural model mentioned above yielded the following regression output:
-
-<br/>
-<br/>
-
-<img src="img/output1200.png" width="450" height="150">
-
-<br/>
-<br/>
-
-Interestingly enough, we see that there does not appear to be a statistically significant correlation between admission rates and median earnings. These results seem to confirm the findings of the two-stage model from before:  
-for accomplished and driven students, attending a selective university does not have a meaningful causal effect on their long-run professional success in life.
-Of course, it's difficult to conclude anything definitive from this analysis (just as it's difficult to conclude anything definitive about causality ever), but
-at least these results are encouraging. 
-
+<div class="card">
+        <a style="text-decoration:none;" align=middle class="imageLink" href = "gpr.html">
+        <img src="img/gpr.png" alt="Avatar" style="width:100%">
+        </a>
+        <div class="container">
+          <h4><b>On Gaussian Process Regression</b></h4> 
+          <p>January 21, 2018</p>
+        </div>
+</div>
 
 </center>
-</div>
-
-
-
-
-<div class="blogentryheader">
-<center>An Overview of the Central Limit Theorem</center>
-</div>
-
-<div class="blogentrydate">
-<center>March 11, 2018</center>
-</div>
-
-<div class="blogentry">
-<center>
-Without question, the Central Limit Theorem (CLT) describes one of the most remarkable phenomena in the known universe: the distribution of the average of a large sample of random quantities tends to a bell curve. This is amazing considering the underlying distribution of the random quantities is irrelevant. All one has to do is take a large sample of these random quantities and average the sample. This sample average will be close to the true mean of the underlying distribution, and the sampling distribution of this average will yield key insight into the underlying distribution of the data.
-
-<br/>
-<br/>
-<br/>
-For a theorem as fundamental as the Central Limit Theorem, its proof is surprisingly straightforward. It goes as follows. Consider a sample of i.i.d. random variables \( X_1, X_2, \ldots, X_n \) with mean \(\mu\) and variance \(\sigma^2\). Let \(S_n = \sum_{i=1}^n X_i\) denote the sum of the random variables. We want to show that
-
-$$\lim_{n \rightarrow \infty} \mathbb{P}\bigg( \frac{S_n - n\mu}{\sigma \sqrt{n}} \leq x \bigg) = \Phi(x)$$
-
-where \( \Phi(x) \) is the cumulative distribution function of a standard normal random variable. At first glance this expression looks intimidating, but it's only saying what we already know:  the sum of a large number of random variables is distributed in a bell curve. Let's get into the proof.
-
-<br/>
-<br/>
-<br/>
-The proof of the CLT relies on an important object known as the Moment Generating Function (MGF). The MGF of a random variable \(Y\) is given by
-
-$$\psi_Y (t) = \mathbb{E}[e^{tY}] = \sum_{j = 0}^{\infty}e^{tj} \mathbb{P}(Y = j).$$
-
-Despite the dubious appearance, Moment Generating Functions are incredibly useful in statistics. The key application of them in this context rests on an important fact about probability distributions:  if two random variables have the same MGF, then they have the same probability distribution.  To show that the distribution of \(Z_n = \frac{S_n - n \mu}{\sigma \sqrt{n}}\) follows a bell curve as \(n\) becomes large enough, we can show that the MGF of \(Z_n\) tends to the MGF of a standard normal random variable as \(n\) tends to infinity. Note that the MGF of a standard normal random variable is given by \( \psi(t) = e^{t^2 /2}  \), so we want to show that \( \psi_{Z_n} (t) \rightarrow e^{t^2 /2} \) as \(n \rightarrow \infty  \).
-<br/>
-<br/>
-<br/>
-
- From now on, let \(\psi_X (t)\) denote the MGF of \(X_i\). For the sake of simplicity, assume that \(\mu = 0\), so \(Z_n = \frac{S_n}{\sigma \sqrt{n}} \). Then
-
-$$\psi_{Z_n} (t) = \bigg( \psi_{X}\bigg(\frac{t}{\sigma \sqrt{n}}  \bigg)  \bigg)^n.$$
-
-Here's where it gets interesting. From calculus (everybody's favorite subject!) we know that we can approximate a function about a fixed point by a Taylor series. In this case
-
-$$\psi_{X}\bigg(\frac{t}{\sigma \sqrt{n}} \bigg) \approx \psi_{X}(0) + \frac{t}{\sigma \sqrt{n}} \psi_{X}'(0) + \frac{1}{2} \bigg( \frac{t}{\sigma \sqrt{n}} \bigg)^2 \psi_{X}''(0) + \mathcal{O}\bigg(\frac{1}{n^{3/2}}\bigg)$$
-
-$$= 1 + \frac{1}{2} \bigg( \frac{t}{\sigma \sqrt{n}} \bigg)^2 \sigma^2 + \mathcal{O}\bigg(\frac{1}{n^{3/2}}\bigg) = 1 +  \frac{t^2}{2n} + \mathcal{O}\bigg(\frac{1}{n^{3/2}}\bigg)$$
-
-Let \( e_n \) denote the higher order term above. Then
-
-$$\psi_{Z_n} (t) = \bigg( \psi_{X}\bigg(\frac{t}{\sigma \sqrt{n}}  \bigg)  \bigg)^n = \bigg( 1 +  \frac{t^2}{2n} + e_n \bigg)^n = \bigg( 1 +  \frac{t^2 / 2 + ne_n}{n}\bigg)^n.$$
-
-Finally
-
-$$\lim_{n \rightarrow \infty} \psi_{Z_n} (t) = \lim_{n \rightarrow \infty} \bigg( 1 +  \frac{t^2 / 2 + ne_n}{n}\bigg)^n = e^{t^2 /2}.$$
-
-Note that \(n e_n \rightarrow 0\) as \(n \rightarrow \infty\), which is why that term disappears in the final result.
-
-<br/>
-<br/>
-<br/>
-That's it! We just proved one of the most fundamental natural phenonema in the physical world using nothing more than calculus and basic probability. It's astonishing that something seemingly so complicated can be proved with such little machinery, but it's all true. I think that's pretty cool.
-
-
-
-</center>
-</div>
-
-<div class="blogentryheader">
-<center>Gaussian Process Regression:  Elegant, Efficient, ...Exciting?</center>
-</div>
-
-<div class="blogentrydate">
-<center>January 21, 2018</center>
-</div>
-
-<div class="blogentry">
-<center>
-Utter the word "regression" and you'll hear the collective groans of 200,000 AP Stats students nationwide. Regression isn't sexy, but as a framework for statistical inference its use is widespread. For anyone who hasn't thought in some time about fitting curves to data points, the term "regression" refers to a set of statistical procedures used in estimating the relationships between variables in a statistical model. The goal of regression is to predict the value of a particular variable by constructing a function that outputs the <i> conditional expectation </i> of that variable given the values of other variables in the model. For example, if we have a model consisting of only two variables \(X\) and \(Y\), then we could predict the value of \(Y\) by constructing a function \(f(x) = \mathbb{E}(Y | X = x) \) and choosing \( \hat{y} = f(x) \) to be our "best guess" (or our prediction) for \(Y\). 
-
-<br/>
-<br/>
-<br/>
-There are many ways to choose this function \( f(x) \). The simplest and most common way is to choose it to be linear, so that the function is of the form
-
-$$ f(x) = \beta_0 + \beta_1 x $$
-
-where \( \beta_0\) and \( \beta_1 \) are cleverly chosen real numbers. This is called linear regression. Another common way of choosing the function \(f(x)\) is to make it a quadratic function, i.e. of the form \(f(x) = \beta_0 + \beta_1 x + \beta_2 x^2 \), where \( \beta_0\), \( \beta_1\), and \( \beta_2\) are again some real numbers. Unsurprsingly, this is called quadratic regression.
-
-<br/>
-<br/>
-<br/>
-Choosing the right form for \(f(x)\) is like driving a car. Just as it's tempting to floor the gas pedal to show off to your friends, it's all too tempting to pick a crazy curve that snakes perfectly through your data. The problem with picking a crazy curve like this is that the curve is bound to <i> overfit </i> to your data. In other words, the curve's shape will reflect simple white noise in the data, not the relationships that you necessarily care about. So how should you pick the form of your function? Again, it's like driving a car. If you're not sure, take it slow and keep it simple. Linear models often work well. Maybe try plotting the data to see what shape it takes on naturally and then go from there.
-
-<br/>
-<br/>
-One more thing:  under no circumstances should you ever show off your snake-shaped regression function to your friends. If your friends thought you were cool before, they almost certainly don't anymore.
-
-<br/>
-<br/>
-<br/>
-This brings us to Gaussian process regression (GPR), a regression technique that is less restrictive than the ones we've considered thus far. As before, our goal still is to predict the values of certain variables given realizations of other variables in the model, but there is one key difference with GPR. In Gaussian process regression, we do <i> not </i> explicitly construct a function \(f(x)\) as we did before. Instead, we model the <i> distribution </i> of the function's outputs as a multivariate Gaussian distribution. With each sequential realization of the function \(f(x)\), we update the multivariate Gaussian distribution using Bayes' Rule. The assumption here is that we can sample from \(f(x)\) as often as we like, though we can't actually determine its form.
-
-<br/>
-<br/>
-<br/>
-To recap, Gaussian process regression differs from, say, linear regression or quadratic regression in that no assumption about the form of the function \(f(x)\) is made. The only assumption we make is that the joint distribution of the function evaluations is multivariate Gaussian. Now let's get into the details.
-
-
-<br/>
-<br/>
-<br/>
-Suppose that we wish to predict the value of a function \(f(x) \) at a particular point \(x_*\), but we do not know \(f(x)\). The best we can do is pick points \(x_1, x_2, \ldots, x_n\) and sample the function evaluations \(f(x_1), f(x_2), \ldots, f(x_n)\) at these points. Given these evaluations, we can specify a joint distribution for \( f(x_1), f(x_2), \ldots, f(x_n), f(x_*)\) and then specifiy the <i> posterior </i> distribution for \(f(x_*)\). After we have determined the posterior distribution, we can predict \(f(x_*)\) by computing its expectation. 
-
-<br/>
-<br/>
-We specifiy the joint distribution as follows. We assume that the vector
-
-$$ \begin{pmatrix} f(x_1) \\ f(x_2) \\ \vdots \\ f(x_n) \\ f(x_*)  \end{pmatrix}$$
-
-follows a multivariate Gaussian distribution. In other words, we have
-
-$$ \begin{pmatrix} f(x_1) \\ f(x_2) \\ \vdots \\ f(x_n) \\ f(x_*)  \end{pmatrix} \sim \mathcal{N} \left(\begin{pmatrix} \mu(x_1) \\ \mu(x_2) \\ \vdots \\ \mu(x_n) \\ \mu(x_*) \end{pmatrix} , \begin{pmatrix} k(x_1, x_1) && k(x_1, x_2) && \ldots && k(x_1, x_n) && k(x_1, x_*) \\ k(x_2, x_1) && k(x_2, x_2) && \ldots && k(x_2, x_n) && k(x_2, x_*) \\ \vdots && \vdots && \ddots && \vdots && \vdots \\ k(x_n, x_1) && k(x_n, x_2) && \ldots && k(x_n, x_n) && k(x_n, x_*) \\ k(x_*, x_1) && k(x_*, x_2) && \ldots && k(x_*, x_n) && k(x_*, x_*) \\\end{pmatrix} \right)$$
-
-where \(K\) denotes the covariance matrix above, \(\mu\) denotes the mean vector above, and \( f(x) \) denotes the vector of the evaluations. The distribution function is
-
-$$p(f(x_1), f(x_2), \ldots, f(x_n), f(x_*)) = \frac{1}{\sqrt{(2\pi)^{n + 1} |K|}} e^{-\frac{1}{2} \big(f(x) - \mu)^T K^{-1} (f(x) - \mu)\big)}$$
-
-This looks complicated, but it really isn't that bad. The function \( \mu(\cdot) \) is called the mean function and the function \( k(\cdot, \cdot)\) is called the covariance function. They are the heart of any GPR model, and we get to pick them. A common choice for \( \mu(\cdot) \) is a constant function. Another common choice is \( \mu(\cdot) = \mu_0 + \sum_{j = 1}^J \lambda_j \psi_j(\cdot) \) where the functions \( \psi_j \) are known and the parameters \( \mu_0, \lambda_1, \ldots, \lambda_J \) are estimated from the data. As for the covariance function, it needs to satisfy two criteria. The first is that it must encode our belief that two nearby points \(x\) and \(x'\) map to similar values \(f(x)\) and \(f(x')\). The second is that it must always produce a <i> positive semi-definite </i> covariance matrix \(K\), where a positive semi-definite matrix \(K\) satisfies \( x^T K x \geq 0 \) for all points \(x\). The most commonly chosen covariance function is the squared-exponential, or Gaussian, kernel. This function is of the form
-
-$$k(x, x') = \alpha e^{-\sum_{i = 1}^d \beta_i (x_i - x_i')^2}$$
-
-where \( \alpha, \beta_1, \ldots, \beta_d \) are parameters that we choose. These parameters control the overall variability of the function \( f(x) \), and they usually require some fine-tuning.
-
-<br/>
-<br/>
-<br/>
-Great! We're almost there. Now that we have the joint distribution for \( f(x_1), f(x_2), \ldots, f(x_n), f(x_*)\), we can calculate the posterior distribution of \( f(x_*) \) given \( f(x_1), f(x_2), \ldots, f(x_n)\) without much work. Let's call this posterior distribution \(\xi(f(x_*) | f(x_1), f(x_2), \ldots, f(x_n))\). Then
-
-$$ \xi(f(x_*) | f(x_1), f(x_2), \ldots, f(x_n)) = \frac{p(f(x_1), f(x_2), \ldots, f(x_n), f(x_*))}{p(f(x_1), f(x_2), \ldots, f(x_n))} \propto p(f(x_1), f(x_2), \ldots, f(x_n), f(x_*))$$
-
-$$=\frac{1}{\sqrt{(2\pi)^{n + 1} |K|}} e^{-\frac{1}{2} \big(f(x) - \mu)^T K^{-1} (f(x) - \mu)\big)}. $$
-
-Here's where the magic happens. As it turns out, the posterior distribution  \( \xi(f(x_*) | f(x_1), f(x_2), \ldots, f(x_n)) \) is itself a Gaussian distribution! The mean and variance of this Gaussian distribution are related to the mean and covariance of the joint Gaussian distribution by factors of matrix products. These factors involve submatrices of the covariance matrix \(K\) as well as inverses of some of these submatrices, and the notation gets messy. I'll leave them out for the sake of brevity. 
-
-<br/>
-<br/>
-<br/>
-We can finally predict \( f(x_*) \) by computing the expectation of this posterior distribution, which amounts to computing the mean of a Gaussian distribution. This mean is given by
-
-$$\widehat{f(x_*)} = \begin{pmatrix} k(x_1, x_*) \\ k(x_2, x_*) \\ \vdots \\ k(x_n, x_*) \end{pmatrix}^T \begin{pmatrix} k(x_1, x_1) && k(x_1, x_2) && \ldots && k(x_1, x_n) \\ k(x_2, x_1) && k(x_2, x_2) && \ldots && k(x_2, x_n) \\ \vdots && \vdots && \ddots && \vdots \\ k(x_n, x_1) && k(x_n, x_2) && \ldots && k(x_n, x_n) \end{pmatrix} \begin{pmatrix} f(x_1) \\ f(x_2) \\ \vdots \\ f(x_n)  \end{pmatrix}.$$
-
-<br/>
-<br/>
-Ok, let's take a step back to consider what we've accomplished here. We have a regression technique that differs from ordinary linear regression or quadratic regression in that it makes no assumptions about the <i> form </i> of the relationship between the variables in the model. The only assumption made is that observations are jointly normal. This is both elegant in its simplicity and powerful in its generality. If that's not exciting then I don't know what is (...only partially kidding here...)! I should probably note that I've swept many important details under the rug, notably in the computation of the posterior distribution, and I'll address that soon. But that's for another day.
-
-</center>
-</div>
-
-
-<div class="blogentryheader">
-<center>First Post</center>
-</div>
-
-<div class="blogentrydate">
-<center>January 18, 2018</center>
-</div>
-
-<div class="blogentry">
-<center>
-Well, here it is: my first post on this site. The plan is for this to be a space where I can post my thoughts on anything that I find interesting and worth sharing. </br>
-I suspect that most posts here will revolve around a book/article I've read, a movie I've watched, or a mathematical/statistical/economic principle I've finally wrapped </br>
-my head around, but your guess is as good as mine. More to come later.
-</center>
-</div>
 
 	
 

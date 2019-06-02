@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+
+<html>
+<meta charset = "UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+<head>
+<title> Ramblings </title>
+<link rel="stylesheet" href = "css/styles.css"></link>
+</head>
+
+
+<body>
+
+<div class="blogtitle">
+<center>Thoughts of the Day</center>
+</div>
+
+<div class="blogsubtitle">
+<center>(READER DISCRETION HIGHLY ADVISED)</center>
+</div>
+
+<div class="blogentryheader">
+<center>An Overview of the Central Limit Theorem</center>
+</div>
+
+<div class="blogentrydate">
+<center>March 11, 2018</center>
+</div>
+
+<div class="blogentry">
+<center>
+Without question, the Central Limit Theorem (CLT) describes one of the most remarkable phenomena in the known universe: the distribution of the average of a large sample of random quantities tends to a bell curve. This is amazing considering the underlying distribution of the random quantities is irrelevant. All one has to do is take a large sample of these random quantities and average the sample. This sample average will be close to the true mean of the underlying distribution, and the sampling distribution of this average will yield key insight into the underlying distribution of the data.
+
+<br/>
+<br/>
+<br/>
+For a theorem as fundamental as the Central Limit Theorem, its proof is surprisingly straightforward. It goes as follows. Consider a sample of i.i.d. random variables \( X_1, X_2, \ldots, X_n \) with mean \(\mu\) and variance \(\sigma^2\). Let \(S_n = \sum_{i=1}^n X_i\) denote the sum of the random variables. We want to show that
+
+$$\lim_{n \rightarrow \infty} \mathbb{P}\bigg( \frac{S_n - n\mu}{\sigma \sqrt{n}} \leq x \bigg) = \Phi(x)$$
+
+where \( \Phi(x) \) is the cumulative distribution function of a standard normal random variable. At first glance this expression looks intimidating, but it's only saying what we already know:  the sum of a large number of random variables is distributed in a bell curve. Let's get into the proof.
+
+<br/>
+<br/>
+<br/>
+The proof of the CLT relies on an important object known as the Moment Generating Function (MGF). The MGF of a random variable \(Y\) is given by
+
+$$\psi_Y (t) = \mathbb{E}[e^{tY}] = \sum_{j = 0}^{\infty}e^{tj} \mathbb{P}(Y = j).$$
+
+Despite the dubious appearance, Moment Generating Functions are incredibly useful in statistics. The key application of them in this context rests on an important fact about probability distributions:  if two random variables have the same MGF, then they have the same probability distribution.  To show that the distribution of \(Z_n = \frac{S_n - n \mu}{\sigma \sqrt{n}}\) follows a bell curve as \(n\) becomes large enough, we can show that the MGF of \(Z_n\) tends to the MGF of a standard normal random variable as \(n\) tends to infinity. Note that the MGF of a standard normal random variable is given by \( \psi(t) = e^{t^2 /2}  \), so we want to show that \( \psi_{Z_n} (t) \rightarrow e^{t^2 /2} \) as \(n \rightarrow \infty  \).
+<br/>
+<br/>
+<br/>
+
+ From now on, let \(\psi_X (t)\) denote the MGF of \(X_i\). For the sake of simplicity, assume that \(\mu = 0\), so \(Z_n = \frac{S_n}{\sigma \sqrt{n}} \). Then
+
+$$\psi_{Z_n} (t) = \bigg( \psi_{X}\bigg(\frac{t}{\sigma \sqrt{n}}  \bigg)  \bigg)^n.$$
+
+Here's where it gets interesting. From calculus (everybody's favorite subject!) we know that we can approximate a function about a fixed point by a Taylor series. In this case
+
+$$\psi_{X}\bigg(\frac{t}{\sigma \sqrt{n}} \bigg) \approx \psi_{X}(0) + \frac{t}{\sigma \sqrt{n}} \psi_{X}'(0) + \frac{1}{2} \bigg( \frac{t}{\sigma \sqrt{n}} \bigg)^2 \psi_{X}''(0) + \mathcal{O}\bigg(\frac{1}{n^{3/2}}\bigg)$$
+
+$$= 1 + \frac{1}{2} \bigg( \frac{t}{\sigma \sqrt{n}} \bigg)^2 \sigma^2 + \mathcal{O}\bigg(\frac{1}{n^{3/2}}\bigg) = 1 +  \frac{t^2}{2n} + \mathcal{O}\bigg(\frac{1}{n^{3/2}}\bigg)$$
+
+Let \( e_n \) denote the higher order term above. Then
+
+$$\psi_{Z_n} (t) = \bigg( \psi_{X}\bigg(\frac{t}{\sigma \sqrt{n}}  \bigg)  \bigg)^n = \bigg( 1 +  \frac{t^2}{2n} + e_n \bigg)^n = \bigg( 1 +  \frac{t^2 / 2 + ne_n}{n}\bigg)^n.$$
+
+Finally
+
+$$\lim_{n \rightarrow \infty} \psi_{Z_n} (t) = \lim_{n \rightarrow \infty} \bigg( 1 +  \frac{t^2 / 2 + ne_n}{n}\bigg)^n = e^{t^2 /2}.$$
+
+Note that \(n e_n \rightarrow 0\) as \(n \rightarrow \infty\), which is why that term disappears in the final result.
+
+<br/>
+<br/>
+<br/>
+That's it! We just proved one of the most fundamental natural phenonema in the physical world using nothing more than calculus and basic probability. It's astonishing that something seemingly so complicated can be proved with such little machinery, but it's all true. I think that's pretty cool.
+
+
+
+</center>
+</div>
+
+
+</body>
+
+</html>

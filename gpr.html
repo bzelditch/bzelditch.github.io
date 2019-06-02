@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+
+<html>
+<meta charset = "UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+<head>
+<title> Ramblings </title>
+<link rel="stylesheet" href = "css/styles.css"></link>
+</head>
+
+
+<body>
+
+<div class="blogtitle">
+<center>Thoughts of the Day</center>
+</div>
+
+<div class="blogsubtitle">
+<center>(READER DISCRETION HIGHLY ADVISED)</center>
+</div>
+
+
+<div class="blogentryheader">
+<center>Gaussian Process Regression:  Elegant, Efficient, ...Exciting?</center>
+</div>
+
+<div class="blogentrydate">
+<center>January 21, 2018</center>
+</div>
+
+<div class="blogentry">
+<center>
+Utter the word "regression" and you'll hear the collective groans of 200,000 AP Stats students nationwide. Regression isn't sexy, but as a framework for statistical inference its use is widespread. For anyone who hasn't thought in some time about fitting curves to data points, the term "regression" refers to a set of statistical procedures used in estimating the relationships between variables in a statistical model. The goal of regression is to predict the value of a particular variable by constructing a function that outputs the <i> conditional expectation </i> of that variable given the values of other variables in the model. For example, if we have a model consisting of only two variables \(X\) and \(Y\), then we could predict the value of \(Y\) by constructing a function \(f(x) = \mathbb{E}(Y | X = x) \) and choosing \( \hat{y} = f(x) \) to be our "best guess" (or our prediction) for \(Y\). 
+
+<br/>
+<br/>
+<br/>
+There are many ways to choose this function \( f(x) \). The simplest and most common way is to choose it to be linear, so that the function is of the form
+
+$$ f(x) = \beta_0 + \beta_1 x $$
+
+where \( \beta_0\) and \( \beta_1 \) are cleverly chosen real numbers. This is called linear regression. Another common way of choosing the function \(f(x)\) is to make it a quadratic function, i.e. of the form \(f(x) = \beta_0 + \beta_1 x + \beta_2 x^2 \), where \( \beta_0\), \( \beta_1\), and \( \beta_2\) are again some real numbers. Unsurprsingly, this is called quadratic regression.
+
+<br/>
+<br/>
+<br/>
+Choosing the right form for \(f(x)\) is like driving a car. Just as it's tempting to floor the gas pedal to show off to your friends, it's all too tempting to pick a crazy curve that snakes perfectly through your data. The problem with picking a crazy curve like this is that the curve is bound to <i> overfit </i> to your data. In other words, the curve's shape will reflect simple white noise in the data, not the relationships that you necessarily care about. So how should you pick the form of your function? Again, it's like driving a car. If you're not sure, take it slow and keep it simple. Linear models often work well. Maybe try plotting the data to see what shape it takes on naturally and then go from there.
+
+<br/>
+<br/>
+One more thing:  under no circumstances should you ever show off your snake-shaped regression function to your friends. If your friends thought you were cool before, they almost certainly don't anymore.
+
+<br/>
+<br/>
+<br/>
+This brings us to Gaussian process regression (GPR), a regression technique that is less restrictive than the ones we've considered thus far. As before, our goal still is to predict the values of certain variables given realizations of other variables in the model, but there is one key difference with GPR. In Gaussian process regression, we do <i> not </i> explicitly construct a function \(f(x)\) as we did before. Instead, we model the <i> distribution </i> of the function's outputs as a multivariate Gaussian distribution. With each sequential realization of the function \(f(x)\), we update the multivariate Gaussian distribution using Bayes' Rule. The assumption here is that we can sample from \(f(x)\) as often as we like, though we can't actually determine its form.
+
+<br/>
+<br/>
+<br/>
+To recap, Gaussian process regression differs from, say, linear regression or quadratic regression in that no assumption about the form of the function \(f(x)\) is made. The only assumption we make is that the joint distribution of the function evaluations is multivariate Gaussian. Now let's get into the details.
+
+
+<br/>
+<br/>
+<br/>
+Suppose that we wish to predict the value of a function \(f(x) \) at a particular point \(x_*\), but we do not know \(f(x)\). The best we can do is pick points \(x_1, x_2, \ldots, x_n\) and sample the function evaluations \(f(x_1), f(x_2), \ldots, f(x_n)\) at these points. Given these evaluations, we can specify a joint distribution for \( f(x_1), f(x_2), \ldots, f(x_n), f(x_*)\) and then specifiy the <i> posterior </i> distribution for \(f(x_*)\). After we have determined the posterior distribution, we can predict \(f(x_*)\) by computing its expectation. 
+
+<br/>
+<br/>
+We specifiy the joint distribution as follows. We assume that the vector
+
+$$ \begin{pmatrix} f(x_1) \\ f(x_2) \\ \vdots \\ f(x_n) \\ f(x_*)  \end{pmatrix}$$
+
+follows a multivariate Gaussian distribution. In other words, we have
+
+$$ \begin{pmatrix} f(x_1) \\ f(x_2) \\ \vdots \\ f(x_n) \\ f(x_*)  \end{pmatrix} \sim \mathcal{N} \left(\begin{pmatrix} \mu(x_1) \\ \mu(x_2) \\ \vdots \\ \mu(x_n) \\ \mu(x_*) \end{pmatrix} , \begin{pmatrix} k(x_1, x_1) && k(x_1, x_2) && \ldots && k(x_1, x_n) && k(x_1, x_*) \\ k(x_2, x_1) && k(x_2, x_2) && \ldots && k(x_2, x_n) && k(x_2, x_*) \\ \vdots && \vdots && \ddots && \vdots && \vdots \\ k(x_n, x_1) && k(x_n, x_2) && \ldots && k(x_n, x_n) && k(x_n, x_*) \\ k(x_*, x_1) && k(x_*, x_2) && \ldots && k(x_*, x_n) && k(x_*, x_*) \\\end{pmatrix} \right)$$
+
+where \(K\) denotes the covariance matrix above, \(\mu\) denotes the mean vector above, and \( f(x) \) denotes the vector of the evaluations. The distribution function is
+
+$$p(f(x_1), f(x_2), \ldots, f(x_n), f(x_*)) = \frac{1}{\sqrt{(2\pi)^{n + 1} |K|}} e^{-\frac{1}{2} \big(f(x) - \mu)^T K^{-1} (f(x) - \mu)\big)}$$
+
+This looks complicated, but it really isn't that bad. The function \( \mu(\cdot) \) is called the mean function and the function \( k(\cdot, \cdot)\) is called the covariance function. They are the heart of any GPR model, and we get to pick them. A common choice for \( \mu(\cdot) \) is a constant function. Another common choice is \( \mu(\cdot) = \mu_0 + \sum_{j = 1}^J \lambda_j \psi_j(\cdot) \) where the functions \( \psi_j \) are known and the parameters \( \mu_0, \lambda_1, \ldots, \lambda_J \) are estimated from the data. As for the covariance function, it needs to satisfy two criteria. The first is that it must encode our belief that two nearby points \(x\) and \(x'\) map to similar values \(f(x)\) and \(f(x')\). The second is that it must always produce a <i> positive semi-definite </i> covariance matrix \(K\), where a positive semi-definite matrix \(K\) satisfies \( x^T K x \geq 0 \) for all points \(x\). The most commonly chosen covariance function is the squared-exponential, or Gaussian, kernel. This function is of the form
+
+$$k(x, x') = \alpha e^{-\sum_{i = 1}^d \beta_i (x_i - x_i')^2}$$
+
+where \( \alpha, \beta_1, \ldots, \beta_d \) are parameters that we choose. These parameters control the overall variability of the function \( f(x) \), and they usually require some fine-tuning.
+
+<br/>
+<br/>
+<br/>
+Great! We're almost there. Now that we have the joint distribution for \( f(x_1), f(x_2), \ldots, f(x_n), f(x_*)\), we can calculate the posterior distribution of \( f(x_*) \) given \( f(x_1), f(x_2), \ldots, f(x_n)\) without much work. Let's call this posterior distribution \(\xi(f(x_*) | f(x_1), f(x_2), \ldots, f(x_n))\). Then
+
+$$ \xi(f(x_*) | f(x_1), f(x_2), \ldots, f(x_n)) = \frac{p(f(x_1), f(x_2), \ldots, f(x_n), f(x_*))}{p(f(x_1), f(x_2), \ldots, f(x_n))} \propto p(f(x_1), f(x_2), \ldots, f(x_n), f(x_*))$$
+
+$$=\frac{1}{\sqrt{(2\pi)^{n + 1} |K|}} e^{-\frac{1}{2} \big(f(x) - \mu)^T K^{-1} (f(x) - \mu)\big)}. $$
+
+Here's where the magic happens. As it turns out, the posterior distribution  \( \xi(f(x_*) | f(x_1), f(x_2), \ldots, f(x_n)) \) is itself a Gaussian distribution! The mean and variance of this Gaussian distribution are related to the mean and covariance of the joint Gaussian distribution by factors of matrix products. These factors involve submatrices of the covariance matrix \(K\) as well as inverses of some of these submatrices, and the notation gets messy. I'll leave them out for the sake of brevity. 
+
+<br/>
+<br/>
+<br/>
+We can finally predict \( f(x_*) \) by computing the expectation of this posterior distribution, which amounts to computing the mean of a Gaussian distribution. This mean is given by
+
+$$\widehat{f(x_*)} = \begin{pmatrix} k(x_1, x_*) \\ k(x_2, x_*) \\ \vdots \\ k(x_n, x_*) \end{pmatrix}^T \begin{pmatrix} k(x_1, x_1) && k(x_1, x_2) && \ldots && k(x_1, x_n) \\ k(x_2, x_1) && k(x_2, x_2) && \ldots && k(x_2, x_n) \\ \vdots && \vdots && \ddots && \vdots \\ k(x_n, x_1) && k(x_n, x_2) && \ldots && k(x_n, x_n) \end{pmatrix} \begin{pmatrix} f(x_1) \\ f(x_2) \\ \vdots \\ f(x_n)  \end{pmatrix}.$$
+
+<br/>
+<br/>
+Ok, let's take a step back to consider what we've accomplished here. We have a regression technique that differs from ordinary linear regression or quadratic regression in that it makes no assumptions about the <i> form </i> of the relationship between the variables in the model. The only assumption made is that observations are jointly normal. This is both elegant in its simplicity and powerful in its generality. If that's not exciting then I don't know what is (...only partially kidding here...)! I should probably note that I've swept many important details under the rug, notably in the computation of the posterior distribution, and I'll address that soon. But that's for another day.
+
+</center>
+</div>
+
+
+</body>
+
+</html>
