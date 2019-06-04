@@ -168,25 +168,26 @@ in a statistically significant way, which suggests that a university's selectivi
 
 <br/>
 <br/>
-Not yet completely satisfied, I decided only to consider universities with an average SAT score above a certain threshold. Using a threshold score of 1200, I re-plotted
+Not yet completely satisfied, I decided only to consider universities with an average SAT score above a certain threshold. The idea
+behind this was to see if the same trends would hold for students who are already high-achieving before entering university. Using a threshold score of 1300, I re-plotted
 the relationship between admission rates and long-run earnings, as well as the covariates from earlier:
 
 <br/>
 
-<img src="img/admrate1200.png" width="450" height="250">
+<img src="img/admrate1300.png" width="450" height="250">
 
 <br/>
 <br/>
 
-<img src="img/sat1200.png" width="450" height="250">
+<img src="img/sat1300.png" width="450" height="250">
 
-<img src="img/mdfaminc1200.png" width="450" height="250">
+<img src="img/mdfaminc1300.png" width="450" height="250">
 
-<img src="img/satadmrate1200.png" width="450" height="250">
+<img src="img/satadmrate1300.png" width="450" height="250">
 
 <br/>
 
-As discovered before, there is a clear negative correlation between admission rates and long-run earnings, even for students who perform well on the SAT. Similarly,
+As discovered before, there is a negative correlation between admission rates and long-run earnings, even for students who perform well on the SAT. Similarly,
 there are very strong correlations between SAT scores and long-run earnings, as well as SAT scores and admission rates. On the other hand, there does not
 appear to be a strong correlation between family income profiles and long-run earnings. This suggests that family wealth isn't as relevant for the best high school students as it
 is for more average students in the overall landscape of American high schools.
@@ -199,13 +200,66 @@ Fitting the first structural model mentioned above yielded the following regress
 <br/>
 <br/>
 
-<img src="img/output1200.png" width="450" height="150">
+<img src="img/output1300.png" width="450" height="150">
 
 <br/>
 <br/>
 
 Interestingly enough, we see that there does not appear to be a statistically significant correlation between admission rates and median earnings. These results seem to confirm the findings of the two-stage model from before:  
 for accomplished and driven students, attending a selective university does not have a meaningful causal effect on their long-run professional success in life.
+
+<br/>
+<br/>
+But what about students who come from disadvantaged backgrounds? Maybe for these particular students, the effect of attending a selective university actually is meaningful, as it
+might provide an unprecedented opportunity for upward mobility. To answer this question, I considered two more models, each incorporating interaction effects:
+
+<br/>
+<br/>
+$$ \text{EARNINGS} = \beta_0 + \beta_ 1 \text{ADM_RATE} + \beta_2 \text{MINORITY} + \beta_3 \text{ADM_RATE} \cdot \text{MINORITY} + \beta_4 \text{SAT} + \beta_5 \text{FAM_INCOME} + \epsilon    $$
+
+$$ \text{EARNINGS} = \beta_0 + \beta_ 1 \text{ADM_RATE} + \beta_2 \text{PCT_LOW_INCOME} + \beta_3 \text{ADM_RATE} \cdot \text{PCT_LOW_INCOME} + \beta_4 \text{SAT} + \beta_5 \text{FAM_INCOME} + \epsilon    $$
+<br/>
+<br/>
+Here MINORITY and PCT_LOW_INCOME are continuous variables indicating the percentage of minority (black and hispanic) and low income students at a university, respectively. These yielded the following
+regression outputs:
+
+<br/>
+<br/>
+
+<img src="img/minority.png" width="500" height="200">
+
+<img src="img/lowinc.png" width="500" height="200">
+
+<br/>
+<br/>
+These results are fascinating. In both cases here, admission rates are correlated with long-run earnings in a statistically significant way and the interaction effects are also significant!
+More specifically, in the first model we see that
+
+
+<br/>
+<br/>
+$$ \frac{\partial \text{EARNINGS}}{\partial \text{ADM_RATE}} \approx 100000 - 620000 \cdot \text{MINORITY}$$
+
+<br/>
+and in the second model we see that 
+
+<br/>
+<br/>
+
+$$ \frac{\partial \text{EARNINGS}}{\partial \text{ADM_RATE}} \approx 90000 - 370000 \cdot \text{PCT_LOW_INCOME}.$$
+
+<br/>
+Observe that in both cases, the marginal effect of increasing admission rates is negative, and this marginal effect increases in magnitude
+as the percentage of minority and low income students increases, respectively. This suggests that for many disadvantaged students, attending a 
+selective university actually does correspond to greater long-run earnings, even when controlling for their SAT scores (remember that all universities here
+had an average SAT score of at least 1300 out of 1600). To put it another way, for students who come from disadvantaged backgrounds, there is a meaningful benefit to attending a selective university in its own right!
+
+
+
+<br/>
+<br/>
+So, does attending a highly selective have a meaningful causal effect on one's success in life? For students who come from advantaged backgrounds, the answer is
+probably no. However, for students who come disadvantaged backgrounds, the answer could very well be yes.
 Of course, it's difficult to conclude anything definitive from this analysis (just as it's difficult to conclude anything definitive about causality ever), but
 at least these results are encouraging. 
 
